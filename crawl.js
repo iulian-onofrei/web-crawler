@@ -1,5 +1,23 @@
 const { JSDOM } = require('jsdom')
 
+
+async function crawlPage(url) {
+  try {
+    const response = await fetch(url)
+    const contentType = response.headers.get('content-type')
+    if (!contentType.includes('text/html')) {
+      console.error(
+        new Error("Content-Type header is NOT text/html")
+      )
+      return
+    }
+    const body = await response.text()
+    console.log(body)
+  } catch (err) {
+    console.error(new Error(err.message))
+  }
+}
+
 function normalizeURL(url) {
   const urlObj = new URL(url)
   const hostname = urlObj.hostname
@@ -21,5 +39,6 @@ function getURLsFromHTML(htmlBody, baseURL) {
 
 module.exports = {
   normalizeURL,
-  getURLsFromHTML
+  getURLsFromHTML,
+  crawlPage
 }
